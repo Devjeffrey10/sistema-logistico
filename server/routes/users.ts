@@ -214,12 +214,9 @@ export const handleLogin: RequestHandler = async (req, res) => {
     // Find user in Supabase
     console.log("Attempting login for email:", email);
 
-    // First, check if user exists
+    // Try different approach to avoid RLS policy issues
     const { data: existingUser, error: checkError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", email)
-      .single();
+      .rpc('authenticate_user', { user_email: email, user_password: password });
 
     console.log("User lookup result:", { existingUser, checkError });
 
