@@ -81,8 +81,8 @@ export function createServer() {
         login: "✅ Funcionando",
         register: "✅ Funcionando (modo compatibilidade)",
         users: "✅ Funcionando",
-        database: "⚠️ Modo compatibilidade (RLS issues)"
-      }
+        database: "⚠️ Modo compatibilidade (RLS issues)",
+      },
     });
   });
 
@@ -91,7 +91,8 @@ export function createServer() {
     try {
       const { createClient } = await import("@supabase/supabase-js");
       const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
-      const supabaseKey = process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+      const supabaseKey =
+        process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
       const supabase = createClient(supabaseUrl, supabaseKey);
 
       const { data, error } = await supabase
@@ -104,12 +105,12 @@ export function createServer() {
         keyConfigured: !!supabaseKey,
         keyLength: supabaseKey.length,
         data,
-        error
+        error,
       });
     } catch (error) {
       res.json({
         success: false,
-        error: error.message
+        error: error.message,
       });
     }
   });

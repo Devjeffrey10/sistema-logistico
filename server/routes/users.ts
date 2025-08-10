@@ -12,7 +12,8 @@ import {
 
 // Initialize Supabase client
 const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
-const supabaseKey = process.env.SUPABASE_KEY ||
+const supabaseKey =
+  process.env.SUPABASE_KEY ||
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   "";
@@ -161,11 +162,16 @@ export const handleRegister: RequestHandler = async (req, res) => {
 
       return res.status(201).json(response);
     } catch (supabaseError) {
-      console.log("Supabase registration failed, using temporary storage:", supabaseError);
+      console.log(
+        "Supabase registration failed, using temporary storage:",
+        supabaseError,
+      );
 
       // For now, simulate successful registration
       // In production, this would need proper database solution
-      console.log("✅ User registration simulated successfully (temp solution)");
+      console.log(
+        "✅ User registration simulated successfully (temp solution)",
+      );
 
       const response: LoginResponse = {
         success: true,
@@ -229,7 +235,12 @@ export const handleLogin: RequestHandler = async (req, res) => {
 
     const { email, password } = validation.data;
 
-    console.log("Attempting login for email:", email, "with password:", password);
+    console.log(
+      "Attempting login for email:",
+      email,
+      "with password:",
+      password,
+    );
 
     // Try to authenticate with Supabase first
     const { data: supabaseUser, error: supabaseError } = await supabase
@@ -249,12 +260,15 @@ export const handleLogin: RequestHandler = async (req, res) => {
         name: supabaseUser.name,
         email: supabaseUser.email,
         role: supabaseUser.role,
-        status: supabaseUser.status
+        status: supabaseUser.status,
       };
       console.log("✅ Login successful: Using real Supabase user");
     } else {
       // Fallback to hardcoded real users if Supabase RLS blocks access
-      console.log("Supabase login blocked, using real user fallback:", supabaseError?.message);
+      console.log(
+        "Supabase login blocked, using real user fallback:",
+        supabaseError?.message,
+      );
 
       if (email === "admin@sistema.com" && password === "123456") {
         user = {
@@ -262,27 +276,36 @@ export const handleLogin: RequestHandler = async (req, res) => {
           name: "Administrador do Sistema",
           email: "admin@sistema.com",
           role: "admin",
-          status: "active"
+          status: "active",
         };
         console.log("✅ Login successful: Using real admin user");
-      } else if (email === "professorjeffersoninfor@gmail.com" && password === "jeff123") {
+      } else if (
+        email === "professorjeffersoninfor@gmail.com" &&
+        password === "jeff123"
+      ) {
         user = {
           id: "prof-jefferson",
           name: "Professor Jefferson",
           email: "professorjeffersoninfor@gmail.com",
           role: "admin",
-          status: "active"
+          status: "active",
         };
         console.log("✅ Login successful: Using real professor user");
       } else if (email === "professorjeffersoninfor@gmail.com") {
-        console.log("❌ Login failed: Wrong password for professor. Expected: jeff123, Got:", password);
+        console.log(
+          "❌ Login failed: Wrong password for professor. Expected: jeff123, Got:",
+          password,
+        );
         const response: LoginResponse = {
           success: false,
           error: "Senha incorreta para Professor Jefferson. Tente: jeff123",
         };
         return res.status(401).json(response);
       } else if (email === "admin@sistema.com") {
-        console.log("❌ Login failed: Wrong password for admin. Expected: 123456, Got:", password);
+        console.log(
+          "❌ Login failed: Wrong password for admin. Expected: 123456, Got:",
+          password,
+        );
         const response: LoginResponse = {
           success: false,
           error: "Senha incorreta para admin. Tente: 123456",
@@ -292,7 +315,8 @@ export const handleLogin: RequestHandler = async (req, res) => {
         console.log("❌ Login failed: User not found. Email:", email);
         const response: LoginResponse = {
           success: false,
-          error: "Email não encontrado. Usuários válidos: admin@sistema.com ou professorjeffersoninfor@gmail.com",
+          error:
+            "Email não encontrado. Usuários válidos: admin@sistema.com ou professorjeffersoninfor@gmail.com",
         };
         return res.status(401).json(response);
       }
@@ -338,7 +362,10 @@ export const handleGetUsers: RequestHandler = async (req, res) => {
 
     // If Supabase fails due to RLS, use real data from your database as fallback
     if (error) {
-      console.log("Supabase access blocked, using real data as fallback:", error.message);
+      console.log(
+        "Supabase access blocked, using real data as fallback:",
+        error.message,
+      );
 
       // Real users from your Supabase database (based on CSV data provided)
       const realUsers: User[] = [
@@ -350,7 +377,7 @@ export const handleGetUsers: RequestHandler = async (req, res) => {
           phone: "(11) 99999-1001",
           status: "active",
           createdAt: "2025-08-10",
-          lastLogin: "2025-01-18"
+          lastLogin: "2025-01-18",
         },
         {
           id: "prof-jefferson",
@@ -360,8 +387,8 @@ export const handleGetUsers: RequestHandler = async (req, res) => {
           phone: "(11) 99999-1002",
           status: "active",
           createdAt: "2025-08-10",
-          lastLogin: "2025-01-18"
-        }
+          lastLogin: "2025-01-18",
+        },
       ];
 
       console.log("✅ Returning real users data from fallback");
@@ -375,7 +402,10 @@ export const handleGetUsers: RequestHandler = async (req, res) => {
 
     // If Supabase works, process the real data
     const usersWithoutPasswords = users.map(excludePassword);
-    console.log("✅ Successfully fetched users from Supabase:", usersWithoutPasswords.length);
+    console.log(
+      "✅ Successfully fetched users from Supabase:",
+      usersWithoutPasswords.length,
+    );
 
     const response: ApiResponse<User[]> = {
       success: true,

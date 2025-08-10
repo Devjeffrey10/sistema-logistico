@@ -25,6 +25,7 @@ SUPABASE_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 ### 🔑 Credenciais de Login
 
 Usuários disponíveis para teste:
+
 - **admin@sistema.com** / senha: **123456**
 - **professorjeffersoninfor@gmail.com** / senha: **jeff123**
 
