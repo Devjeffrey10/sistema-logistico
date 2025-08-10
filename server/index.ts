@@ -69,6 +69,52 @@ export function createServer() {
     res.json({ message: ping });
   });
 
+  // System status endpoint
+  app.get("/api/status", (_req, res) => {
+    res.json({
+      status: "online",
+      message: "Sistema Logístico funcionando",
+      timestamp: new Date().toISOString(),
+      version: "1.0.0",
+      environment: process.env.NODE_ENV || "development",
+      features: {
+        login: "✅ Funcionando",
+        register: "✅ Funcionando (modo compatibilidade)",
+        users: "✅ Funcionando",
+        database: "⚠️ Modo compatibilidade (RLS issues)",
+      },
+    });
+  });
+
+  // Test Supabase connection
+  app.get("/api/test-db", async (_req, res) => {
+    try {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
+      const supabaseKey =
+        process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("id, email, name, status")
+        .limit(5);
+
+      res.json({
+        success: true,
+        keyConfigured: !!supabaseKey,
+        keyLength: supabaseKey.length,
+        data,
+        error,
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
   app.get("/api/demo", handleDemo);
 
   // User management routes
