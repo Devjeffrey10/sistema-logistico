@@ -12,11 +12,11 @@ import {
 
 // Initialize Supabase client
 const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
-const supabaseServiceKey =
+const supabaseKey = process.env.SUPABASE_KEY ||
   process.env.SUPABASE_SERVICE_ROLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   "";
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Supabase database user interface
 interface DatabaseUser {
