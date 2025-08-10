@@ -69,6 +69,23 @@ export function createServer() {
     res.json({ message: ping });
   });
 
+  // System status endpoint
+  app.get("/api/status", (_req, res) => {
+    res.json({
+      status: "online",
+      message: "Sistema Logístico funcionando",
+      timestamp: new Date().toISOString(),
+      version: "1.0.0",
+      environment: process.env.NODE_ENV || "development",
+      features: {
+        login: "✅ Funcionando",
+        register: "✅ Funcionando (modo compatibilidade)",
+        users: "✅ Funcionando",
+        database: "⚠️ Modo compatibilidade (RLS issues)"
+      }
+    });
+  });
+
   // Test Supabase connection
   app.get("/api/test-db", async (_req, res) => {
     try {
