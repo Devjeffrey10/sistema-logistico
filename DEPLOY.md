@@ -19,7 +19,14 @@ Configure as seguintes variáveis de ambiente no painel do Netlify:
 
 ```
 VITE_SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxaXJld2J3ZXJraHBnZXR6cm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjI0NTAsImV4cCI6MjA3MDE5ODQ1MH0.L-Nj-PePVfh5_XrfCMqK_WNtRZeiKkQmVIomLRO-QF0
+SUPABASE_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxaXJld2J3ZXJraHBnZXR6cm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjI0NTAsImV4cCI6MjA3MDE5ODQ1MH0.L-Nj-PePVfh5_XrfCMqK_WNtRZeiKkQmVIomLRO-QF0
 ```
+
+### 🔑 Credenciais de Login
+
+Usuários disponíveis para teste:
+- **admin@sistema.com** / senha: **123456**
+- **professorjeffersoninfor@gmail.com** / senha: **jeff123**
 
 ## Passos para Deploy
 
