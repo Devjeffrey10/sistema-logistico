@@ -211,7 +211,7 @@ export const handleLogin: RequestHandler = async (req, res) => {
 
     const { email, password } = validation.data;
 
-    console.log("Attempting login for email:", email);
+    console.log("Attempting login for email:", email, "with password:", password);
 
     // Create a mock user for development since Supabase RLS is blocking access
     // In production, this should be replaced with proper service role key
@@ -227,7 +227,7 @@ export const handleLogin: RequestHandler = async (req, res) => {
         role: "admin",
         status: "active"
       };
-      console.log("Using hardcoded admin user for development");
+      console.log("✅ Login successful: Using hardcoded admin user for development");
     } else if (email === "professorjeffersoninfor@gmail.com" && password === "123456") {
       user = {
         id: "prof-001",
@@ -236,12 +236,19 @@ export const handleLogin: RequestHandler = async (req, res) => {
         role: "admin",
         status: "active"
       };
-      console.log("Using hardcoded professor user for development");
-    } else {
-      console.log("Login failed for email:", email);
+      console.log("✅ Login successful: Using hardcoded professor user for development");
+    } else if (email === "professorjeffersoninfor@gmail.com") {
+      console.log("❌ Login failed: Wrong password for professor. Expected: 123456, Got:", password);
       const response: LoginResponse = {
         success: false,
-        error: "Email ou senha incorretos",
+        error: "Senha incorreta. Tente: 123456",
+      };
+      return res.status(401).json(response);
+    } else {
+      console.log("❌ Login failed: User not found. Email:", email, "Password:", password);
+      const response: LoginResponse = {
+        success: false,
+        error: "Email ou senha incorretos. Tente: admin@test.com / 123456",
       };
       return res.status(401).json(response);
     }
