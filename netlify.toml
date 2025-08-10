@@ -1,0 +1,34 @@
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "dist/spa"
+
+[build.environment]
+  VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlxaXJld2J3ZXJraHBnZXR6cm1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2MjI0NTAsImV4cCI6MjA3MDE5ODQ1MH0.L-Nj-PePVfh5_XrfCMqK_WNtRZeiKkQmVIomLRO-QF0"
+  NODE_VERSION = "18"
+
+[functions]
+  external_node_modules = ["express", "@supabase/supabase-js"]
+  node_bundler = "esbuild"
+
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[[redirects]]
+  force = true
+  from = "/api/*"
+  status = 200
+  to = "/.netlify/functions/api/:splat"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
