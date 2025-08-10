@@ -212,22 +212,55 @@ export const handleLogin: RequestHandler = async (req, res) => {
     const { email, password } = validation.data;
 
     // Find user in Supabase
-    const { data: user, error: userError } = await supabase
+    console.log("Attempting login for email:", email);
+
+    // First, check if user exists
+    const { data: existingUser, error: checkError } = await supabase
       .from("users")
       .select("*")
       .eq("email", email)
-      .eq("password", password)
-      .eq("status", "active")
       .single();
 
-    if (userError || !user) {
-      console.log("Login attempt failed for:", email);
+    console.log("User lookup result:", { existingUser, checkError });
+
+    if (checkError) {
+      console.log("Database error during user lookup:", checkError);
       const response: LoginResponse = {
         success: false,
-        error: "Email ou senha incorretos",
+        error: "Erro ao verificar usuário",
+      };
+      return res.status(500).json(response);
+    }
+
+    if (!existingUser) {
+      console.log("User not found for email:", email);
+      const response: LoginResponse = {
+        success: false,
+        error: "Email não encontrado",
       };
       return res.status(401).json(response);
     }
+
+    // Check password and status
+    if (existingUser.password !== password) {
+      console.log("Password mismatch for email:", email);
+      const response: LoginResponse = {
+        success: false,
+        error: "Senha incorreta",
+      };
+      return res.status(401).json(response);
+    }
+
+    if (existingUser.status !== "active") {
+      console.log("User account not active for email:", email);
+      const response: LoginResponse = {
+        success: false,
+        error: "Conta inativa",
+      };
+      return res.status(401).json(response);
+    }
+
+    const user = existingUser;
 
     // Update last login
     await supabase
