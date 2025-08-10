@@ -247,7 +247,7 @@ export const handleLogin: RequestHandler = async (req, res) => {
           status: "active"
         };
         console.log("✅ Login successful: Using real admin user");
-      } else if (email === "professorjeffersoninfor@gmail.com" && password === "123456") {
+      } else if (email === "professorjeffersoninfor@gmail.com" && password === "jeff123") {
         user = {
           id: "prof-jefferson",
           name: "Professor Jefferson",
@@ -256,11 +256,18 @@ export const handleLogin: RequestHandler = async (req, res) => {
           status: "active"
         };
         console.log("✅ Login successful: Using real professor user");
-      } else if (email === "professorjeffersoninfor@gmail.com" || email === "admin@sistema.com") {
-        console.log("❌ Login failed: Wrong password. Expected: 123456, Got:", password);
+      } else if (email === "professorjeffersoninfor@gmail.com") {
+        console.log("❌ Login failed: Wrong password for professor. Expected: jeff123, Got:", password);
         const response: LoginResponse = {
           success: false,
-          error: "Senha incorreta. Tente: 123456",
+          error: "Senha incorreta para Professor Jefferson. Tente: jeff123",
+        };
+        return res.status(401).json(response);
+      } else if (email === "admin@sistema.com") {
+        console.log("❌ Login failed: Wrong password for admin. Expected: 123456, Got:", password);
+        const response: LoginResponse = {
+          success: false,
+          error: "Senha incorreta para admin. Tente: 123456",
         };
         return res.status(401).json(response);
       } else {
