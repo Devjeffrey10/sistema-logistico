@@ -69,6 +69,34 @@ export function createServer() {
     res.json({ message: ping });
   });
 
+  // Test Supabase connection
+  app.get("/api/test-db", async (_req, res) => {
+    try {
+      const { createClient } = await import("@supabase/supabase-js");
+      const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
+      const supabaseKey = process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("id, email, name, status")
+        .limit(5);
+
+      res.json({
+        success: true,
+        keyConfigured: !!supabaseKey,
+        keyLength: supabaseKey.length,
+        data,
+        error
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
   app.get("/api/demo", handleDemo);
 
   // User management routes
