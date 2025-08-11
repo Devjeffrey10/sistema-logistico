@@ -33,6 +33,8 @@ export default function SupabaseLogin() {
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState("");
 
   // Signup form state
   const [signupEmail, setSignupEmail] = useState("");
