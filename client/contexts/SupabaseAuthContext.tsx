@@ -180,6 +180,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signOut,
         resetPassword,
+        resendConfirmation,
       }}
     >
       {children}
