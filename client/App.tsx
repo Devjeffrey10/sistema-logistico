@@ -34,10 +34,7 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   const { user, loading } = useSupabaseAuth();
 
-  console.log('🚀 AppRoutes - Estado atual:', { user: user?.email, loading });
-
   if (loading) {
-    console.log('⏳ Mostrando loading...');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -49,11 +46,8 @@ const AppRoutes = () => {
   }
 
   if (!user) {
-    console.log('🔐 Usuário não autenticado, mostrando login');
     return <SupabaseLogin />;
   }
-
-  console.log('✅ Usuário autenticado, mostrando dashboard');
 
   return (
     <AuthProvider>
