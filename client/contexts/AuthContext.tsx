@@ -94,17 +94,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify(loginData),
       });
 
-      // Check if response is ok first
-      if (!response.ok) {
-        console.error("Login failed:", response.status, response.statusText);
+      // Clone response to avoid "body stream already read" error
+      const responseClone = response.clone();
+
+      // Check content type
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("Login response is not JSON:", contentType);
         setIsLoading(false);
         return false;
       }
 
       // Parse response only once
-      const data: LoginResponse = await response.json();
+      let data: LoginResponse;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse login response:", parseError);
 
-      if (data.success && data.user) {
+        // Try to get response text for debugging
+        try {
+          const responseText = await responseClone.text();
+          console.error("Login response text:", responseText);
+        } catch (textError) {
+          console.error("Could not read login response text:", textError);
+        }
+
+        setIsLoading(false);
+        return false;
+      }
+
+      if (response.ok && data.success && data.user) {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
         setIsLoading(false);
