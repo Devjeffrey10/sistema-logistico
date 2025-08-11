@@ -104,7 +104,7 @@ export default function SupabaseLogin() {
       return;
     }
 
-    const { error } = await signUp(signupEmail, signupPassword);
+    const { error } = await signUp(signupEmail, signupPassword, userRole);
     if (error) {
       setSignupError(error);
     } else {
@@ -114,6 +114,7 @@ export default function SupabaseLogin() {
       setSignupEmail("");
       setSignupPassword("");
       setConfirmPassword("");
+      setUserRole("operator");
     }
   };
 
