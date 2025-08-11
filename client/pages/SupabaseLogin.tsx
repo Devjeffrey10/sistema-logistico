@@ -235,6 +235,32 @@ export default function SupabaseLogin() {
                     </Alert>
                   )}
 
+                  {showResendConfirmation && (
+                    <Alert>
+                      <Mail className="h-4 w-4" />
+                      <AlertDescription>
+                        <div className="flex items-center justify-between">
+                          <span>Precisa confirmar o email?</span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleResendConfirmation}
+                            disabled={loading}
+                          >
+                            Reenviar
+                          </Button>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {resendSuccess && (
+                    <Alert>
+                      <Mail className="h-4 w-4" />
+                      <AlertDescription>{resendSuccess}</AlertDescription>
+                    </Alert>
+                  )}
+
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? (
                       <>
