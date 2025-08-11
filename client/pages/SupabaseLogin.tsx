@@ -29,6 +29,7 @@ import {
   Lock,
   AlertCircle,
   UserPlus,
+  Shield,
 } from "lucide-react";
 
 export default function SupabaseLogin() {
