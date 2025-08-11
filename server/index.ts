@@ -91,23 +91,56 @@ export function createServer() {
     try {
       const { createClient } = await import("@supabase/supabase-js");
       const supabaseUrl = "https://yqirewbwerkhpgetzrmg.supabase.co";
-      const supabaseKey =
-        process.env.SUPABASE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
-      const supabase = createClient(supabaseUrl, supabaseKey);
+      const anonKey = process.env.VITE_SUPABASE_ANON_KEY || "";
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
-      const { data, error } = await supabase
+      console.log("🔍 Testing database connection...");
+      console.log("Anon key configured:", !!anonKey);
+      console.log("Service key configured:", !!serviceKey);
+
+      // Test with service role key first (should have full access)
+      const supabaseService = createClient(supabaseUrl, serviceKey);
+
+      const { data: serviceData, error: serviceError } = await supabaseService
+        .from("users")
+        .select("id, email, name, status")
+        .limit(5);
+
+      // Test with anon key
+      const supabaseAnon = createClient(supabaseUrl, anonKey);
+
+      const { data: anonData, error: anonError } = await supabaseAnon
         .from("users")
         .select("id, email, name, status")
         .limit(5);
 
       res.json({
         success: true,
-        keyConfigured: !!supabaseKey,
-        keyLength: supabaseKey.length,
-        data,
-        error,
+        keys: {
+          anonKey: {
+            configured: !!anonKey,
+            length: anonKey.length,
+          },
+          serviceKey: {
+            configured: !!serviceKey,
+            length: serviceKey.length,
+          },
+        },
+        tests: {
+          serviceRole: {
+            data: serviceData,
+            error: serviceError?.message,
+            success: !serviceError,
+          },
+          anonRole: {
+            data: anonData,
+            error: anonError?.message,
+            success: !anonError,
+          },
+        },
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Database test error:", error);
       res.json({
         success: false,
         error: error.message,

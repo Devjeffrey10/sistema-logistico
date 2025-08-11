@@ -94,17 +94,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify(loginData),
       });
 
-      // Check if response is ok first
-      if (!response.ok) {
-        console.error("Login failed:", response.status, response.statusText);
+      // Read response as text first to avoid body stream issues
+      let responseText: string;
+      try {
+        responseText = await response.text();
+      } catch (textError) {
+        console.error("Failed to read login response text:", textError);
         setIsLoading(false);
         return false;
       }
 
-      // Parse response only once
-      const data: LoginResponse = await response.json();
+      // Parse response text as JSON
+      let data: LoginResponse;
+      try {
+        if (!responseText.trim()) {
+          throw new Error("Empty response");
+        }
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("Failed to parse login JSON from text:", parseError);
+        console.error("Login response text was:", responseText);
+        setIsLoading(false);
+        return false;
+      }
 
-      if (data.success && data.user) {
+      if (response.ok && data.success && data.user) {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
         setIsLoading(false);
@@ -127,34 +141,110 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      console.log("🔄 Sending registration request...");
+
+      // Use XMLHttpRequest instead of fetch to avoid any potential middleware interference
+      const result = await new Promise<{ success: boolean; error?: string }>(
+        (resolve) => {
+          const xhr = new XMLHttpRequest();
+
+          xhr.open("POST", "/api/auth/register", true);
+          xhr.setRequestHeader("Content-Type", "application/json");
+
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              console.log(
+                "📡 XHR Response status:",
+                xhr.status,
+                xhr.statusText,
+              );
+              console.log("📄 XHR Response text:", xhr.responseText);
+
+              try {
+                // Parse the response
+                let data: LoginResponse;
+                if (!xhr.responseText.trim()) {
+                  resolve({
+                    success: false,
+                    error: "Resposta vazia do servidor",
+                  });
+                  return;
+                }
+
+                try {
+                  data = JSON.parse(xhr.responseText);
+                } catch (parseError) {
+                  console.error("Failed to parse JSON:", parseError);
+                  resolve({
+                    success: false,
+                    error: `Erro do servidor (${xhr.status}): Resposta inválida`,
+                  });
+                  return;
+                }
+
+                if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+                  console.log("✅ Registration successful");
+                  resolve({ success: true });
+                } else {
+                  console.error("❌ Registration failed:", data.error);
+
+                  // Provide specific error messages based on status code
+                  let errorMessage = data.error || "Erro ao criar conta";
+
+                  if (xhr.status === 409) {
+                    errorMessage = "Este email já está em uso";
+                  } else if (xhr.status === 503) {
+                    errorMessage =
+                      "Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
+                  } else if (xhr.status >= 500) {
+                    errorMessage = "Erro interno do servidor. Tente novamente.";
+                  }
+
+                  resolve({ success: false, error: errorMessage });
+                }
+              } catch (error) {
+                console.error("XHR error handling failed:", error);
+                resolve({
+                  success: false,
+                  error: "Erro interno de processamento",
+                });
+              }
+            }
+          };
+
+          xhr.onerror = function () {
+            console.error("XHR network error");
+            resolve({
+              success: false,
+              error:
+                "Erro de conexão. Verifique sua internet e tente novamente.",
+            });
+          };
+
+          xhr.ontimeout = function () {
+            console.error("XHR timeout");
+            resolve({
+              success: false,
+              error: "Timeout: O servidor demorou muito para responder.",
+            });
+          };
+
+          xhr.timeout = 10000; // 10 second timeout
+
+          // Send the request
+          xhr.send(JSON.stringify(userData));
         },
-        body: JSON.stringify(userData),
-      });
+      );
 
-      if (!response.ok) {
-        console.error("Register failed:", response.status, response.statusText);
-        setIsLoading(false);
-        return { success: false, error: "Erro no servidor" };
-      }
-
-      const data: LoginResponse = await response.json();
-
-      if (data.success) {
-        setIsLoading(false);
-        return { success: true };
-      } else {
-        console.error("Register failed:", data.error);
-        setIsLoading(false);
-        return { success: false, error: data.error || "Erro ao criar conta" };
-      }
-    } catch (error) {
-      console.error("Register error:", error);
       setIsLoading(false);
-      return { success: false, error: "Erro de conexão" };
+      return result;
+    } catch (error) {
+      console.error("❌ Registration error:", error);
+      setIsLoading(false);
+      return {
+        success: false,
+        error: "Erro de conexão. Verifique sua internet e tente novamente.",
+      };
     }
   };
 
