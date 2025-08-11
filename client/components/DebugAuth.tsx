@@ -30,7 +30,7 @@ export default function DebugAuth() {
         email: "test@test.com",
         password: "123456"
       });
-      
+
       if (error) {
         setTestResult(`Erro no login: ${error.message}`);
       } else {
@@ -39,6 +39,12 @@ export default function DebugAuth() {
     } catch (err) {
       setTestResult(`Erro inesperado no login: ${err}`);
     }
+  };
+
+  const checkSupabaseConfig = () => {
+    const url = import.meta.env.VITE_SUPABASE_URL;
+    const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    setTestResult(`URL: ${url}\nKey: ${key ? 'Configurada' : 'Não configurada'}`);
   };
 
   return (
