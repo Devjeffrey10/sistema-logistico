@@ -19,7 +19,11 @@ interface SupabaseAuthContextType {
   user: SupabaseUser | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, role?: string) => Promise<{ error?: string }>;
+  signUp: (
+    email: string,
+    password: string,
+    role?: string,
+  ) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
@@ -73,7 +77,11 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, role: string = "operator") => {
+  const signUp = async (
+    email: string,
+    password: string,
+    role: string = "operator",
+  ) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -104,8 +112,14 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         // Melhorar mensagem de erro para confirmação de email
-        if (error.message.includes('email not confirmed') || error.message.includes('Email not confirmed')) {
-          return { error: "Você precisa confirmar seu email antes de fazer login. Verifique sua caixa de entrada." };
+        if (
+          error.message.includes("email not confirmed") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          return {
+            error:
+              "Você precisa confirmar seu email antes de fazer login. Verifique sua caixa de entrada.",
+          };
         }
 
         return { error: error.message };
@@ -140,8 +154,8 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const resendConfirmation = async (email: string) => {
     try {
       const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email
+        type: "signup",
+        email: email,
       });
 
       if (error) {

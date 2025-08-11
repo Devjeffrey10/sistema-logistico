@@ -33,7 +33,8 @@ import {
 } from "lucide-react";
 
 export default function SupabaseLogin() {
-  const { signIn, signUp, resetPassword, resendConfirmation, loading } = useSupabaseAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, loading } =
+    useSupabaseAuth();
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState("");
@@ -140,7 +141,9 @@ export default function SupabaseLogin() {
     if (error) {
       setLoginError(error);
     } else {
-      setResendSuccess("Email de confirmação reenviado! Verifique sua caixa de entrada.");
+      setResendSuccess(
+        "Email de confirmação reenviado! Verifique sua caixa de entrada.",
+      );
       setShowResendConfirmation(false);
     }
   };
