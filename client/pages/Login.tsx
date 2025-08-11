@@ -82,12 +82,6 @@ export default function Login() {
             <CardTitle className="text-2xl text-center">Fazer Login</CardTitle>
             <CardDescription className="text-center">
               Entre com suas credenciais para acessar o sistema.
-              <br />
-              <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg text-xs text-blue-700 dark:text-blue-300">
-                <p className="font-medium mb-1">👨‍💼 Contas de demonstração:</p>
-                <p>• admin@sistema.com (senha: 123456)</p>
-                <p>• professorjeffersoninfor@gmail.com (senha: jeff123)</p>
-              </div>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
