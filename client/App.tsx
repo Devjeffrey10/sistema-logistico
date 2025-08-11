@@ -7,7 +7,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
 import {
   SupabaseAuthProvider,
   useSupabaseAuth,
@@ -50,27 +49,25 @@ const AppRoutes = () => {
   }
 
   return (
-    <AuthProvider>
-      <VehicleProvider>
-        <ProductProvider>
-          <ProtectedRoute>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/combustivel" element={<FuelManagement />} />
-                <Route path="/produtos" element={<ProductEntry />} />
-                <Route path="/fornecedores" element={<SupplierManagement />} />
-                <Route path="/relatorios" element={<Reports />} />
-                <Route path="/usuarios" element={<Users />} />
-                <Route path="/frota" element={<VehicleManagement />} />
-                <Route path="/configuracoes" element={<Settings />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-          </ProtectedRoute>
-        </ProductProvider>
-      </VehicleProvider>
-    </AuthProvider>
+    <VehicleProvider>
+      <ProductProvider>
+        <ProtectedRoute>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/combustivel" element={<FuelManagement />} />
+              <Route path="/produtos" element={<ProductEntry />} />
+              <Route path="/fornecedores" element={<SupplierManagement />} />
+              <Route path="/relatorios" element={<Reports />} />
+              <Route path="/usuarios" element={<Users />} />
+              <Route path="/frota" element={<VehicleManagement />} />
+              <Route path="/configuracoes" element={<Settings />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </ProtectedRoute>
+      </ProductProvider>
+    </VehicleProvider>
   );
 };
 

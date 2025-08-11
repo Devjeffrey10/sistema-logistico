@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,8 +59,14 @@ interface User {
 }
 
 export default function UsersPage() {
-  const { users, addUser, updateUser, deleteUser, toggleUserStatus } =
-    useAuth();
+  const { user: currentUser } = useSupabaseAuth();
+
+  // Temporário: lista vazia de usuários até implementarmos a integração completa
+  const users: any[] = [];
+  const addUser = async () => ({ success: false });
+  const updateUser = async () => false;
+  const deleteUser = async () => false;
+  const toggleUserStatus = async () => false;
   const [activeTab, setActiveTab] = useState("list");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("");

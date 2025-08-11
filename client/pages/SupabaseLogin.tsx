@@ -12,6 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
   Loader2,
@@ -22,21 +29,26 @@ import {
   Lock,
   AlertCircle,
   UserPlus,
+  Shield,
 } from "lucide-react";
 
 export default function SupabaseLogin() {
-  const { signIn, signUp, resetPassword, loading } = useSupabaseAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, loading } =
+    useSupabaseAuth();
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState("");
 
   // Signup form state
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [userRole, setUserRole] = useState("operator");
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState("");
@@ -49,6 +61,8 @@ export default function SupabaseLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
+    setShowResendConfirmation(false);
+    setResendSuccess("");
 
     if (!loginEmail || !loginPassword) {
       setLoginError("Por favor, preencha todos os campos");
@@ -56,8 +70,13 @@ export default function SupabaseLogin() {
     }
 
     const { error } = await signIn(loginEmail, loginPassword);
+
     if (error) {
       setLoginError(error);
+      // Mostrar botão de reenvio se for erro de confirmação
+      if (error.includes("confirmar seu email")) {
+        setShowResendConfirmation(true);
+      }
     }
   };
 
@@ -81,7 +100,7 @@ export default function SupabaseLogin() {
       return;
     }
 
-    const { error } = await signUp(signupEmail, signupPassword);
+    const { error } = await signUp(signupEmail, signupPassword, userRole);
     if (error) {
       setSignupError(error);
     } else {
@@ -91,6 +110,7 @@ export default function SupabaseLogin() {
       setSignupEmail("");
       setSignupPassword("");
       setConfirmPassword("");
+      setUserRole("operator");
     }
   };
 
@@ -112,6 +132,19 @@ export default function SupabaseLogin() {
         "Email de recuperação enviado! Verifique sua caixa de entrada.",
       );
       setResetEmail("");
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setResendSuccess("");
+    const { error } = await resendConfirmation(loginEmail);
+    if (error) {
+      setLoginError(error);
+    } else {
+      setResendSuccess(
+        "Email de confirmação reenviado! Verifique sua caixa de entrada.",
+      );
+      setShowResendConfirmation(false);
     }
   };
 
@@ -214,6 +247,32 @@ export default function SupabaseLogin() {
                     </Alert>
                   )}
 
+                  {showResendConfirmation && (
+                    <Alert>
+                      <Mail className="h-4 w-4" />
+                      <AlertDescription>
+                        <div className="flex items-center justify-between">
+                          <span>Precisa confirmar o email?</span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleResendConfirmation}
+                            disabled={loading}
+                          >
+                            Reenviar
+                          </Button>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {resendSuccess && (
+                    <Alert>
+                      <Mail className="h-4 w-4" />
+                      <AlertDescription>{resendSuccess}</AlertDescription>
+                    </Alert>
+                  )}
+
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading ? (
                       <>
@@ -291,6 +350,33 @@ export default function SupabaseLogin() {
                         className="pl-10"
                         disabled={loading}
                       />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="user-role">Tipo de Usuário</Label>
+                    <div className="relative">
+                      <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                      <Select
+                        value={userRole}
+                        onValueChange={setUserRole}
+                        disabled={loading}
+                      >
+                        <SelectTrigger className="pl-10">
+                          <SelectValue placeholder="Selecione o tipo de usuário" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">
+                            Administrador - Acesso completo ao sistema
+                          </SelectItem>
+                          <SelectItem value="operator">
+                            Operador - Gerencia operações diárias
+                          </SelectItem>
+                          <SelectItem value="viewer">
+                            Visualizador - Apenas visualização de relatórios
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 

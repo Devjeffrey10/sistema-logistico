@@ -19,10 +19,15 @@ interface SupabaseAuthContextType {
   user: SupabaseUser | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (
+    email: string,
+    password: string,
+    role?: string,
+  ) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
+  resendConfirmation: (email: string) => Promise<{ error?: string }>;
 }
 
 const SupabaseAuthContext = createContext<SupabaseAuthContextType | undefined>(
@@ -72,14 +77,18 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    role: string = "operator",
+  ) => {
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            role: "operator", // Role padrão para novos usuários
+            role: role,
           },
         },
       });
@@ -96,12 +105,23 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        // Melhorar mensagem de erro para confirmação de email
+        if (
+          error.message.includes("email not confirmed") ||
+          error.message.includes("Email not confirmed")
+        ) {
+          return {
+            error:
+              "Você precisa confirmar seu email antes de fazer login. Verifique sua caixa de entrada.",
+          };
+        }
+
         return { error: error.message };
       }
 
@@ -131,6 +151,23 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const resendConfirmation = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      return { error: "Erro inesperado ao reenviar confirmação" };
+    }
+  };
+
   return (
     <SupabaseAuthContext.Provider
       value={{
@@ -141,6 +178,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signOut,
         resetPassword,
+        resendConfirmation,
       }}
     >
       {children}
