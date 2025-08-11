@@ -59,8 +59,14 @@ interface User {
 }
 
 export default function UsersPage() {
-  const { users, addUser, updateUser, deleteUser, toggleUserStatus } =
-    useAuth();
+  const { user: currentUser } = useSupabaseAuth();
+
+  // Temporário: lista vazia de usuários até implementarmos a integração completa
+  const users: any[] = [];
+  const addUser = async () => ({ success: false });
+  const updateUser = async () => false;
+  const deleteUser = async () => false;
+  const toggleUserStatus = async () => false;
   const [activeTab, setActiveTab] = useState("list");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("");
