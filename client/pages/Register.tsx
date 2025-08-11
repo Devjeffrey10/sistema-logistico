@@ -158,8 +158,13 @@ export default function Register() {
               Preencha as informações para criar sua conta
               <div className="mt-3 p-3 bg-green-50 dark:bg-green-950/30 rounded-lg text-xs text-green-700 dark:text-green-300">
                 <p className="font-medium mb-1">💡 Dica:</p>
-                <p>Após criar sua conta, você poderá fazer login usando suas credenciais.</p>
-                <p>Para teste imediato, use as contas demo na página de login.</p>
+                <p>
+                  Após criar sua conta, você poderá fazer login usando suas
+                  credenciais.
+                </p>
+                <p>
+                  Para teste imediato, use as contas demo na página de login.
+                </p>
               </div>
             </CardDescription>
           </CardHeader>
