@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ThemeToggle from "@/components/ThemeToggle";
-import DebugAuth from "@/components/DebugAuth";
 import {
   Loader2,
   Truck,
