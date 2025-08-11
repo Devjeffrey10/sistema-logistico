@@ -105,18 +105,13 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log('🔑 Tentando fazer login com:', email);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log('📊 Resultado do login:', { data, error });
-
       if (error) {
-        console.error('❌ Erro no login:', error.message);
-
         // Melhorar mensagem de erro para confirmação de email
         if (error.message.includes('email not confirmed') || error.message.includes('Email not confirmed')) {
           return { error: "Você precisa confirmar seu email antes de fazer login. Verifique sua caixa de entrada." };
@@ -125,10 +120,8 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         return { error: error.message };
       }
 
-      console.log('✅ Login realizado com sucesso:', data.user?.email);
       return {};
     } catch (error) {
-      console.error('💥 Erro inesperado no login:', error);
       return { error: "Erro inesperado durante o login" };
     }
   };
