@@ -13,6 +13,7 @@ import {
   LoginResponse,
   ApiResponse,
 } from "@shared/api";
+import { apiCall } from "@/lib/api";
 
 interface AuthUser extends User {
   password?: string;
@@ -68,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUsers = async () => {
     try {
-      const response = await fetch("/api/users");
+      const response = await apiCall("/api/users");
       if (response.ok) {
         const data: ApiResponse<User[]> = await response.json();
         if (data.success && data.data) {
@@ -86,11 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const loginData: LoginRequest = { email, password };
 
-      const response = await fetch("/api/auth/login", {
+      const response = await apiCall("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(loginData),
       });
 
@@ -148,7 +146,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         (resolve) => {
           const xhr = new XMLHttpRequest();
 
-          xhr.open("POST", "/api/auth/register", true);
+          const baseURL = window.location.hostname.includes('netlify.app') ? window.location.origin : '';
+          xhr.open("POST", `${baseURL}/api/auth/register`, true);
           xhr.setRequestHeader("Content-Type", "application/json");
 
           xhr.onreadystatechange = function () {
@@ -258,11 +257,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userData: CreateUserRequest,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch("/api/users", {
+      const response = await apiCall("/api/users", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(userData),
       });
 
@@ -300,11 +296,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userData: UpdateUserRequest,
   ): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await apiCall(`/api/users/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(userData),
       });
 
@@ -325,7 +318,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const deleteUser = async (id: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await apiCall(`/api/users/${id}`, {
         method: "DELETE",
       });
 
@@ -346,7 +339,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const toggleUserStatus = async (id: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}/toggle-status`, {
+      const response = await apiCall(`/api/users/${id}/toggle-status`, {
         method: "PATCH",
       });
 
