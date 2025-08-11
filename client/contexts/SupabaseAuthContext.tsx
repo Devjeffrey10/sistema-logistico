@@ -115,6 +115,12 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       if (error) {
         console.error('❌ Erro no login:', error.message);
+
+        // Melhorar mensagem de erro para confirmação de email
+        if (error.message.includes('email not confirmed') || error.message.includes('Email not confirmed')) {
+          return { error: "Você precisa confirmar seu email antes de fazer login. Verifique sua caixa de entrada." };
+        }
+
         return { error: error.message };
       }
 
