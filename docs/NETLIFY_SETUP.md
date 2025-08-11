@@ -84,8 +84,9 @@ VALUES (
 
 1. No Supabase Dashboard, vá em **Authentication → Settings**
 2. Configure os **Site URLs**:
+
    - **Site URL**: `https://seu-site.netlify.app`
-   - **Redirect URLs**: 
+   - **Redirect URLs**:
      - `https://seu-site.netlify.app/**`
      - `http://localhost:8080/**` (para desenvolvimento)
 
@@ -127,7 +128,7 @@ O arquivo `netlify.toml` já está configurado com:
 [functions]
   external_node_modules = ["express"]
   node_bundler = "esbuild"
-  
+
 [[redirects]]
   force = true
   from = "/api/*"
@@ -154,23 +155,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
-          
+          node-version: "18"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Build
         run: npm run build
-        
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2.0
         with:
-          publish-dir: './dist/spa'
+          publish-dir: "./dist/spa"
           production-branch: main
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -256,7 +257,7 @@ Para problemas específicos:
 
 1. **Netlify**: [Netlify Support](https://www.netlify.com/support/)
 2. **Supabase**: [Supabase Support](https://supabase.com/support)
-3. **Documentação**: 
+3. **Documentação**:
    - [Netlify Docs](https://docs.netlify.com/)
    - [Supabase Docs](https://supabase.com/docs)
 

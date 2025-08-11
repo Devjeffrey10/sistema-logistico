@@ -26,13 +26,13 @@ import {
 
 export default function SupabaseLogin() {
   const { signIn, signUp, resetPassword, loading } = useSupabaseAuth();
-  
+
   // Login form state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
-  
+
   // Signup form state
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
@@ -40,7 +40,7 @@ export default function SupabaseLogin() {
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [signupError, setSignupError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState("");
-  
+
   // Reset password state
   const [resetEmail, setResetEmail] = useState("");
   const [resetError, setResetError] = useState("");
@@ -85,7 +85,9 @@ export default function SupabaseLogin() {
     if (error) {
       setSignupError(error);
     } else {
-      setSignupSuccess("Cadastro realizado! Verifique seu email para confirmar a conta.");
+      setSignupSuccess(
+        "Cadastro realizado! Verifique seu email para confirmar a conta.",
+      );
       setSignupEmail("");
       setSignupPassword("");
       setConfirmPassword("");
@@ -106,7 +108,9 @@ export default function SupabaseLogin() {
     if (error) {
       setResetError(error);
     } else {
-      setResetSuccess("Email de recuperação enviado! Verifique sua caixa de entrada.");
+      setResetSuccess(
+        "Email de recuperação enviado! Verifique sua caixa de entrada.",
+      );
       setResetEmail("");
     }
   };
@@ -139,7 +143,9 @@ export default function SupabaseLogin() {
         {/* Auth Forms */}
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Acesso ao Sistema</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Acesso ao Sistema
+            </CardTitle>
             <CardDescription className="text-center">
               Faça login ou crie uma nova conta
             </CardDescription>
@@ -258,7 +264,9 @@ export default function SupabaseLogin() {
                         variant="ghost"
                         size="icon"
                         className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6"
-                        onClick={() => setShowSignupPassword(!showSignupPassword)}
+                        onClick={() =>
+                          setShowSignupPassword(!showSignupPassword)
+                        }
                         disabled={loading}
                       >
                         {showSignupPassword ? (

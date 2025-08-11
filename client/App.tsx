@@ -8,7 +8,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
-import { SupabaseAuthProvider, useSupabaseAuth } from "./contexts/SupabaseAuthContext";
+import {
+  SupabaseAuthProvider,
+  useSupabaseAuth,
+} from "./contexts/SupabaseAuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { VehicleProvider } from "./contexts/VehicleContext";
 import { ProductProvider } from "./contexts/ProductContext";
@@ -56,10 +59,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/combustivel" element={<FuelManagement />} />
                 <Route path="/produtos" element={<ProductEntry />} />
-                <Route
-                  path="/fornecedores"
-                  element={<SupplierManagement />}
-                />
+                <Route path="/fornecedores" element={<SupplierManagement />} />
                 <Route path="/relatorios" element={<Reports />} />
                 <Route path="/usuarios" element={<Users />} />
                 <Route path="/frota" element={<VehicleManagement />} />

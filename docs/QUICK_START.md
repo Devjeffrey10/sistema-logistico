@@ -83,19 +83,23 @@ Para criar um usuário admin:
 ## 🚨 Troubleshooting Rápido
 
 ### Erro "Invalid API Key"
+
 - ✅ Verifique se as variáveis estão corretas
 - ✅ Redeploy após configurar variáveis
 
 ### Erro de CORS
+
 - ✅ Configure Site URLs no Supabase
 - ✅ Inclua protocolo (https://)
 
 ### Email não chega
+
 - ✅ Verifique spam/promoções
 - ✅ Configure SMTP personalizado no Supabase
 
 ### Build falha
-- ✅ Verifique se todas as variáveis VITE_* estão configuradas
+
+- ✅ Verifique se todas as variáveis VITE\_\* estão configuradas
 - ✅ Teste build local: `npm run build`
 
 ## 📞 Suporte

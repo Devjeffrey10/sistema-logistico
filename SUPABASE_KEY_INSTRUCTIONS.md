@@ -9,17 +9,21 @@
 ## 🔐 Chaves Necessárias
 
 ### 1. Project URL ✅
+
 ```
 https://yqirewbwerkhpgetzrmg.supabase.co
 ```
+
 **Status**: ✅ Já configurado
 
 ### 2. Anon/Public Key 🔑
+
 **Localização**: Settings → API → Project API keys → `anon` `public`
 **Formato**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
 **Uso**: Frontend (pode ser exposta publicamente)
 
 **Para configurar**:
+
 ```bash
 # No Netlify Environment Variables:
 VITE_SUPABASE_ANON_KEY=sua_chave_anon_aqui
@@ -27,11 +31,13 @@ SUPABASE_ANON_KEY=sua_chave_anon_aqui
 ```
 
 ### 3. Service Role Key 🛡️ (Opcional)
+
 **Localização**: Settings → API → Project API keys → `service_role`
 **Formato**: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
 **Uso**: Backend/Functions (NUNCA exponha no frontend)
 
 **Para configurar**:
+
 ```bash
 # No Netlify Environment Variables:
 SUPABASE_SERVICE_KEY=sua_chave_service_aqui
@@ -40,6 +46,7 @@ SUPABASE_SERVICE_KEY=sua_chave_service_aqui
 ## 🚀 Configuração Rápida
 
 ### No Dashboard do Netlify:
+
 1. **Site Settings → Environment Variables**
 2. **Adicionar as variáveis**:
 
@@ -52,6 +59,7 @@ SUPABASE_SERVICE_KEY=[COPIE_A_SERVICE_KEY_DO_SUPABASE]
 ```
 
 ### Para testar localmente:
+
 Crie um arquivo `.env.local`:
 
 ```env
@@ -72,6 +80,7 @@ SUPABASE_SERVICE_KEY=[sua_service_key]
 ## 🔧 Configuração de Autenticação
 
 No Supabase Dashboard:
+
 1. **Authentication → Settings**
 2. **Site URL**: `https://seu-site.netlify.app`
 3. **Redirect URLs**: `https://seu-site.netlify.app/**`

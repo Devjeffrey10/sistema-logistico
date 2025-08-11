@@ -28,17 +28,20 @@ Sistema completo de gestão para transportadoras, desenvolvido com React + TypeS
 ### Netlify + Supabase (Recomendado)
 
 1. **Clone o repositório**
+
    ```bash
    git clone [seu-repositório]
    cd transporte-manager
    ```
 
 2. **Configure o Supabase**
+
    - Crie um projeto no [Supabase](https://supabase.com)
    - Execute o SQL fornecido em `docs/NETLIFY_SETUP.md`
    - Anote as chaves da API
 
 3. **Deploy no Netlify**
+
    - Conecte seu repo no [Netlify](https://netlify.com)
    - Configure as variáveis de ambiente:
      ```env
@@ -58,6 +61,7 @@ Sistema completo de gestão para transportadoras, desenvolvido com React + TypeS
 ## 💻 Desenvolvimento Local
 
 ### Pré-requisitos
+
 - Node.js 18+
 - npm ou yarn
 - Conta Supabase configurada
@@ -126,21 +130,25 @@ Função: admin
 ## 📊 Funcionalidades Detalhadas
 
 ### Dashboard
+
 - Visão geral da operação
 - Métricas em tempo real
 - Gráficos interativos
 
 ### Gestão de Usuários
+
 - Criação de usuários com roles
 - Controle de status (ativo/inativo)
 - Histórico de acessos
 
 ### Gestão de Veículos
+
 - Cadastro completo da frota
 - Manutenções e revisões
 - Histórico de abastecimentos
 
 ### Relatórios
+
 - Consumo de combustível
 - Custos operacionais
 - Performance da frota
@@ -149,13 +157,15 @@ Função: admin
 
 ### Variáveis de Ambiente
 
-**Frontend (VITE_*)**
+**Frontend (VITE\_\*)**
+
 ```env
 VITE_SUPABASE_URL=https://yqirewbwerkhpgetzrmg.supabase.co
 VITE_SUPABASE_ANON_KEY=[chave-publica]
 ```
 
 **Backend**
+
 ```env
 SUPABASE_URL=https://yqirewbwerkhpgetzrmg.supabase.co
 SUPABASE_ANON_KEY=[chave-publica]
@@ -177,10 +187,12 @@ Edite `client/global.css` para personalizar cores e estilos:
 ## 📈 Monitoramento
 
 ### Netlify Analytics
+
 - Acesse o dashboard do Netlify
 - Habilite Analytics para métricas detalhadas
 
 ### Supabase Monitoring
+
 - Dashboard do Supabase
 - Logs de API em tempo real
 - Métricas de performance
@@ -190,12 +202,14 @@ Edite `client/global.css` para personalizar cores e estilos:
 ### Problemas Comuns
 
 **1. Erro de CORS**
+
 ```bash
 # Verifique as URLs permitidas no Supabase
 # Authentication > Settings > Site URLs
 ```
 
 **2. Build Falha**
+
 ```bash
 # Verifique se todas as variáveis estão configuradas
 # Teste local primeiro
@@ -203,6 +217,7 @@ npm run build
 ```
 
 **3. Functions Não Funcionam**
+
 ```bash
 # Teste localmente
 netlify dev

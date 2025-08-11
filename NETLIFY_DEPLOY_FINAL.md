@@ -2,7 +2,7 @@
 
 ## ✅ **Status Atual - SUCESSO!**
 
-- ✅ **Chave Supabase**: Configurada localmente 
+- ✅ **Chave Supabase**: Configurada localmente
 - ✅ **Banco de dados**: Tabela `usuarios` criada
 - ✅ **Trigger**: Perfis automáticos configurados
 - ✅ **RLS**: Segurança habilitada
@@ -11,6 +11,7 @@
 ## 🌐 **Último Passo: Configurar no Netlify**
 
 ### 1. **Vá para o Netlify Dashboard**
+
 ```
 👉 https://app.netlify.com/sites/[seu-site]/settings/env
 ```
@@ -28,16 +29,19 @@ SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 ```
 
 ### 3. **Trigger Deploy**
+
 Após salvar as variáveis:
+
 - ✅ **Netlify fará redeploy automático**
 - ✅ **Aguarde 2-3 minutos**
 
 ### 4. **Configurar Auth no Supabase**
 
 **No Supabase Dashboard:**
+
 1. **Authentication → Settings**
 2. **Site URL**: `https://seu-site.netlify.app`
-3. **Redirect URLs**: 
+3. **Redirect URLs**:
    ```
    https://seu-site.netlify.app/**
    http://localhost:8080/**
@@ -46,6 +50,7 @@ Após salvar as variáveis:
 ## 🧪 **Testar o Sistema**
 
 ### Após o deploy:
+
 1. ✅ **Acesse seu site Netlify**
 2. ✅ **Vá na aba "Cadastro"**
 3. ✅ **Crie uma conta com seu email**
@@ -64,6 +69,7 @@ Após salvar as variáveis:
 ## 🔐 **Primeira Conta Admin**
 
 Para ter privilégios de admin:
+
 1. **Cadastre-se** normalmente
 2. **No Supabase Dashboard** → **Table Editor** → **usuarios**
 3. **Encontre seu usuário** e mude `função` para `admin`
@@ -79,6 +85,7 @@ Para ter privilégios de admin:
 ## 🎉 **SISTEMA PRONTO!**
 
 Seu TransporteManager está:
+
 - ✅ **Deployado** no Netlify
 - ✅ **Integrado** com Supabase
 - ✅ **Seguro** com RLS

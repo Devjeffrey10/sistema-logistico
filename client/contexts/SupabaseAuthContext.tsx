@@ -25,7 +25,9 @@ interface SupabaseAuthContextType {
   resetPassword: (email: string) => Promise<{ error?: string }>;
 }
 
-const SupabaseAuthContext = createContext<SupabaseAuthContextType | undefined>(undefined);
+const SupabaseAuthContext = createContext<SupabaseAuthContextType | undefined>(
+  undefined,
+);
 
 export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -39,7 +41,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         setUser({
           id: session.user.id,
-          email: session.user.email || '',
+          email: session.user.email || "",
           name: session.user.user_metadata?.name,
           role: session.user.user_metadata?.role,
         });
@@ -52,18 +54,18 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
-      
+
       if (session?.user) {
         setUser({
           id: session.user.id,
-          email: session.user.email || '',
+          email: session.user.email || "",
           name: session.user.user_metadata?.name,
           role: session.user.user_metadata?.role,
         });
       } else {
         setUser(null);
       }
-      
+
       setLoading(false);
     });
 
@@ -77,7 +79,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
         password,
         options: {
           data: {
-            role: 'operator', // Role padrão para novos usuários
+            role: "operator", // Role padrão para novos usuários
           },
         },
       });
@@ -88,7 +90,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       return {};
     } catch (error) {
-      return { error: 'Erro inesperado durante o cadastro' };
+      return { error: "Erro inesperado durante o cadastro" };
     }
   };
 
@@ -105,7 +107,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       return {};
     } catch (error) {
-      return { error: 'Erro inesperado durante o login' };
+      return { error: "Erro inesperado durante o login" };
     }
   };
 
@@ -125,7 +127,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       return {};
     } catch (error) {
-      return { error: 'Erro inesperado ao resetar senha' };
+      return { error: "Erro inesperado ao resetar senha" };
     }
   };
 
@@ -149,7 +151,9 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 export function useSupabaseAuth() {
   const context = useContext(SupabaseAuthContext);
   if (context === undefined) {
-    throw new Error('useSupabaseAuth must be used within a SupabaseAuthProvider');
+    throw new Error(
+      "useSupabaseAuth must be used within a SupabaseAuthProvider",
+    );
   }
   return context;
 }
