@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 export default function SupabaseLogin() {
-  const { signIn, signUp, resetPassword, loading } = useSupabaseAuth();
+  const { signIn, signUp, resetPassword, resendConfirmation, loading } = useSupabaseAuth();
 
   // Login form state
   const [loginEmail, setLoginEmail] = useState("");
