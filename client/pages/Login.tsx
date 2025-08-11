@@ -82,10 +82,6 @@ export default function Login() {
             <CardTitle className="text-2xl text-center">Fazer Login</CardTitle>
             <CardDescription className="text-center">
               Entre com suas credenciais para acessar o sistema.
-              <br />
-              <span className="text-xs text-muted-foreground/80">
-                Já tem uma conta? Use seus dados de login abaixo.
-              </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
