@@ -66,6 +66,9 @@ export default function DebugAuth() {
           <Button onClick={testLogin} size="sm" className="w-full">
             Testar Login
           </Button>
+          <Button onClick={checkSupabaseConfig} size="sm" className="w-full" variant="outline">
+            Ver Config
+          </Button>
         </div>
         
         {testResult && (
