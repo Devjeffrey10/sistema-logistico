@@ -52,6 +52,8 @@ export default function SupabaseLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
+    setShowResendConfirmation(false);
+    setResendSuccess("");
 
     if (!loginEmail || !loginPassword) {
       setLoginError("Por favor, preencha todos os campos");
@@ -61,6 +63,10 @@ export default function SupabaseLogin() {
     const { error } = await signIn(loginEmail, loginPassword);
     if (error) {
       setLoginError(error);
+      // Mostrar botão de reenvio se for erro de confirmação
+      if (error.includes("confirmar seu email")) {
+        setShowResendConfirmation(true);
+      }
     }
   };
 
