@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { apiCall } from "@/lib/api";
 
 export interface User {
   id: string;
@@ -35,7 +36,7 @@ export function useUsers() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/users");
+      const response = await apiCall("/api/users");
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -62,11 +63,8 @@ export function useUsers() {
     userData: CreateUserRequest,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch("/api/users", {
+      const response = await apiCall("/api/users", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(userData),
       });
 
@@ -98,11 +96,8 @@ export function useUsers() {
     updates: Partial<User>,
   ): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await apiCall(`/api/users/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify(updates),
       });
 
@@ -130,7 +125,7 @@ export function useUsers() {
 
   const deleteUser = async (id: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await apiCall(`/api/users/${id}`, {
         method: "DELETE",
       });
 
@@ -156,7 +151,7 @@ export function useUsers() {
 
   const toggleUserStatus = async (id: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/users/${id}/toggle-status`, {
+      const response = await apiCall(`/api/users/${id}/toggle-status`, {
         method: "PATCH",
       });
 
