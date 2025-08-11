@@ -63,15 +63,12 @@ export default function SupabaseLogin() {
     setShowResendConfirmation(false);
     setResendSuccess("");
 
-    console.log('📝 Tentando login com:', loginEmail);
-
     if (!loginEmail || !loginPassword) {
       setLoginError("Por favor, preencha todos os campos");
       return;
     }
 
     const { error } = await signIn(loginEmail, loginPassword);
-    console.log('📊 Resultado do signIn:', { error });
 
     if (error) {
       setLoginError(error);
@@ -79,8 +76,6 @@ export default function SupabaseLogin() {
       if (error.includes("confirmar seu email")) {
         setShowResendConfirmation(true);
       }
-    } else {
-      console.log('✅ Login realizado com sucesso!');
     }
   };
 
