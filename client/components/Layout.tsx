@@ -26,7 +26,8 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, signOut } = useSupabaseAuth();
+  const logout = signOut;
 
   // Filter navigation based on user role
   const allNavigation = [
