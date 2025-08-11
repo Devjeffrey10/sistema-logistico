@@ -84,6 +84,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
       try {
         body = JSON.parse(body);
       } catch (e) {
+        console.error("JSON parse error:", e);
         const response: LoginResponse = {
           success: false,
           error: "Formato de dados inválido",
@@ -93,6 +94,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
     }
 
     if (!body || typeof body !== "object") {
+      console.error("Invalid body:", body);
       const response: LoginResponse = {
         success: false,
         error: "Dados obrigatórios ausentes",
@@ -103,6 +105,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
     const validation = createUserSchema.safeParse(body);
 
     if (!validation.success) {
+      console.error("Validation error:", validation.error.errors);
       const response: LoginResponse = {
         success: false,
         error: validation.error.errors[0]?.message || "Dados inválidos",
@@ -111,10 +114,12 @@ export const handleRegister: RequestHandler = async (req, res) => {
     }
 
     const userData = validation.data;
-    console.log("Attempting to register user:", userData.email);
+    console.log("🔄 Attempting to register user:", userData.email);
 
     // Try to use Supabase first
     try {
+      console.log("🔍 Checking if email already exists...");
+
       // Check if email already exists in Supabase
       const { data: existingUser, error: checkError } = await supabase
         .from("users")
@@ -122,13 +127,22 @@ export const handleRegister: RequestHandler = async (req, res) => {
         .eq("email", userData.email)
         .single();
 
+      // Handle the case where no user is found (this is expected)
+      if (checkError && checkError.code !== "PGRST116") {
+        console.error("Database check error:", checkError);
+        throw new Error(`Database check failed: ${checkError.message}`);
+      }
+
       if (existingUser) {
+        console.log("❌ Email already exists:", userData.email);
         const response: LoginResponse = {
           success: false,
           error: "Este email já está em uso",
         };
         return res.status(409).json(response);
       }
+
+      console.log("✅ Email is available, creating user...");
 
       // Create new user in Supabase
       const { data: newUser, error: insertError } = await supabase
@@ -146,10 +160,11 @@ export const handleRegister: RequestHandler = async (req, res) => {
         .single();
 
       if (insertError) {
-        throw insertError;
+        console.error("Database insert error:", insertError);
+        throw new Error(`Database insert failed: ${insertError.message}`);
       }
 
-      console.log("✅ User registered successfully in Supabase");
+      console.log("✅ User registered successfully in Supabase:", newUser.id);
       const response: LoginResponse = {
         success: true,
         user: {
@@ -161,32 +176,42 @@ export const handleRegister: RequestHandler = async (req, res) => {
       };
 
       return res.status(201).json(response);
-    } catch (supabaseError) {
-      console.log(
-        "Supabase registration failed, using temporary storage:",
-        supabaseError,
-      );
+    } catch (supabaseError: any) {
+      console.error("❌ Supabase registration failed:", supabaseError.message);
 
-      // For now, simulate successful registration
-      // In production, this would need proper database solution
-      console.log(
-        "✅ User registration simulated successfully (temp solution)",
-      );
+      // Check if it's a specific database error that we can handle
+      if (supabaseError.message?.includes("duplicate key") ||
+          supabaseError.message?.includes("unique constraint")) {
+        const response: LoginResponse = {
+          success: false,
+          error: "Este email já está em uso",
+        };
+        return res.status(409).json(response);
+      }
 
+      // Check for permission/RLS errors
+      if (supabaseError.message?.includes("permission denied") ||
+          supabaseError.message?.includes("RLS") ||
+          supabaseError.message?.includes("policy")) {
+        console.log("⚠️ Database access restricted, using fallback mode");
+
+        // In case of RLS issues, provide a helpful error message
+        const response: LoginResponse = {
+          success: false,
+          error: "Erro de configuração do banco de dados. Entre em contato com o administrador.",
+        };
+        return res.status(503).json(response);
+      }
+
+      // For other database errors, return a generic error
       const response: LoginResponse = {
-        success: true,
-        user: {
-          id: `temp-${Date.now()}`,
-          name: userData.name,
-          email: userData.email,
-          role: userData.role,
-        },
+        success: false,
+        error: "Erro ao conectar com o banco de dados. Tente novamente.",
       };
-
-      return res.status(201).json(response);
+      return res.status(500).json(response);
     }
-  } catch (error) {
-    console.error("Register error:", error);
+  } catch (error: any) {
+    console.error("❌ Register error:", error);
     const response: LoginResponse = {
       success: false,
       error: "Erro interno do servidor",
