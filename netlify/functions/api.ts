@@ -10,14 +10,14 @@ export const handler = serverless(app, {
     console.log(`[Netlify] ${request.httpMethod} ${request.path}`, {
       headers: request.headers,
       queryStringParameters: request.queryStringParameters,
-      body: request.body ? 'Body present' : 'No body'
+      body: request.body ? "Body present" : "No body",
     });
   },
   response: (response: any) => {
     // Log responses for debugging
     console.log(`[Netlify] Response:`, {
       statusCode: response.statusCode,
-      headers: response.headers
+      headers: response.headers,
     });
-  }
+  },
 });

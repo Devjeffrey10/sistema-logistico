@@ -146,7 +146,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         (resolve) => {
           const xhr = new XMLHttpRequest();
 
-          const baseURL = window.location.hostname.includes('netlify.app') ? window.location.origin : '';
+          const baseURL = window.location.hostname.includes("netlify.app")
+            ? window.location.origin
+            : "";
           xhr.open("POST", `${baseURL}/api/auth/register`, true);
           xhr.setRequestHeader("Content-Type", "application/json");
 
