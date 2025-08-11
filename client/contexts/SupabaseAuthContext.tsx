@@ -153,6 +153,23 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const resendConfirmation = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {};
+    } catch (error) {
+      return { error: "Erro inesperado ao reenviar confirmação" };
+    }
+  };
+
   return (
     <SupabaseAuthContext.Provider
       value={{
