@@ -150,26 +150,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       console.log("📡 Response status:", response.status, response.statusText);
 
-      // Check if response has content-type application/json
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        console.error("Response is not JSON:", contentType);
-        // Read as text for debugging
-        const responseText = await response.text();
-        console.error("Response text:", responseText);
+      // Read response as text first, then parse as JSON
+      // This avoids any body stream issues
+      let responseText: string;
+      try {
+        responseText = await response.text();
+      } catch (textError) {
+        console.error("Failed to read response text:", textError);
         setIsLoading(false);
         return {
           success: false,
-          error: `Erro do servidor (${response.status}): Resposta não é JSON`
+          error: "Erro de comunicação com o servidor"
         };
       }
 
-      // Read the response body only once
+      console.log("📄 Response text:", responseText);
+
+      // Try to parse the text as JSON
       let data: LoginResponse;
       try {
-        data = await response.json();
+        if (!responseText.trim()) {
+          throw new Error("Empty response");
+        }
+        data = JSON.parse(responseText);
       } catch (parseError) {
-        console.error("Failed to parse JSON response:", parseError);
+        console.error("Failed to parse JSON from text:", parseError);
+        console.error("Response text was:", responseText);
         setIsLoading(false);
         return {
           success: false,
