@@ -121,7 +121,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
     // List of hardcoded existing users (admin accounts that should not be re-registered)
     const existingUsers = [
       "admin@sistema.com",
-      "professorjeffersoninfor@gmail.com"
+      "professorjeffersoninfor@gmail.com",
     ];
 
     // Check if this email is already in use by existing admin accounts
@@ -145,7 +145,7 @@ export const handleRegister: RequestHandler = async (req, res) => {
       id: userId,
       email: userData.email,
       name: userData.name,
-      role: userData.role
+      role: userData.role,
     });
 
     const response: LoginResponse = {

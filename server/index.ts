@@ -124,20 +124,20 @@ export function createServer() {
           serviceKey: {
             configured: !!serviceKey,
             length: serviceKey.length,
-          }
+          },
         },
         tests: {
           serviceRole: {
             data: serviceData,
             error: serviceError?.message,
-            success: !serviceError
+            success: !serviceError,
           },
           anonRole: {
             data: anonData,
             error: anonError?.message,
-            success: !anonError
-          }
-        }
+            success: !anonError,
+          },
+        },
       });
     } catch (error: any) {
       console.error("Database test error:", error);
