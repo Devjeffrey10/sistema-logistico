@@ -179,36 +179,43 @@ export const handleRegister: RequestHandler = async (req, res) => {
     } catch (supabaseError: any) {
       console.error("❌ Supabase registration failed:", supabaseError.message);
 
-      // Check if it's a specific database error that we can handle
-      if (supabaseError.message?.includes("duplicate key") ||
-          supabaseError.message?.includes("unique constraint")) {
+      // Ensure we always return a proper JSON response
+      try {
+        // Check if it's a specific database error that we can handle
+        if (supabaseError.message?.includes("duplicate key") ||
+            supabaseError.message?.includes("unique constraint")) {
+          const response: LoginResponse = {
+            success: false,
+            error: "Este email já está em uso",
+          };
+          return res.status(409).json(response);
+        }
+
+        // Check for permission/RLS errors
+        if (supabaseError.message?.includes("permission denied") ||
+            supabaseError.message?.includes("RLS") ||
+            supabaseError.message?.includes("policy")) {
+          console.log("⚠️ Database access restricted, using fallback mode");
+
+          // In case of RLS issues, provide a helpful error message
+          const response: LoginResponse = {
+            success: false,
+            error: "Erro de configuração do banco de dados. Entre em contato com o administrador.",
+          };
+          return res.status(503).json(response);
+        }
+
+        // For other database errors, return a generic error
         const response: LoginResponse = {
           success: false,
-          error: "Este email já está em uso",
+          error: "Erro ao conectar com o banco de dados. Tente novamente.",
         };
-        return res.status(409).json(response);
+        return res.status(500).json(response);
+      } catch (responseError) {
+        console.error("❌ Error sending response:", responseError);
+        // Last resort fallback
+        return res.status(500).end();
       }
-
-      // Check for permission/RLS errors
-      if (supabaseError.message?.includes("permission denied") ||
-          supabaseError.message?.includes("RLS") ||
-          supabaseError.message?.includes("policy")) {
-        console.log("⚠️ Database access restricted, using fallback mode");
-
-        // In case of RLS issues, provide a helpful error message
-        const response: LoginResponse = {
-          success: false,
-          error: "Erro de configuração do banco de dados. Entre em contato com o administrador.",
-        };
-        return res.status(503).json(response);
-      }
-
-      // For other database errors, return a generic error
-      const response: LoginResponse = {
-        success: false,
-        error: "Erro ao conectar com o banco de dados. Tente novamente.",
-      };
-      return res.status(500).json(response);
     }
   } catch (error: any) {
     console.error("❌ Register error:", error);
