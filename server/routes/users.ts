@@ -219,6 +219,13 @@ export const handleRegister: RequestHandler = async (req, res) => {
     }
   } catch (error: any) {
     console.error("❌ Register error:", error);
+
+    // Check if response was already sent
+    if (res.headersSent) {
+      console.error("Headers already sent, cannot send error response");
+      return;
+    }
+
     const response: LoginResponse = {
       success: false,
       error: "Erro interno do servidor",
