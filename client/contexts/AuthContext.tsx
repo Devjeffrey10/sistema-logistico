@@ -94,13 +94,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify(loginData),
       });
 
-      // Clone response to avoid "body stream already read" error
-      const responseClone = response.clone();
-
-      // Check content type
+      // Check content type first
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         console.error("Login response is not JSON:", contentType);
+        // Read as text for debugging
+        const responseText = await response.text();
+        console.error("Login response text:", responseText);
         setIsLoading(false);
         return false;
       }
@@ -111,15 +111,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data = await response.json();
       } catch (parseError) {
         console.error("Failed to parse login response:", parseError);
-
-        // Try to get response text for debugging
-        try {
-          const responseText = await responseClone.text();
-          console.error("Login response text:", responseText);
-        } catch (textError) {
-          console.error("Could not read login response text:", textError);
-        }
-
         setIsLoading(false);
         return false;
       }
