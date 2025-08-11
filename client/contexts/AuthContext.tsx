@@ -37,7 +37,22 @@ interface AuthContextType {
   refreshUsers: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Criar um valor padrão para evitar erro de contexto undefined
+const defaultAuthContext: AuthContextType = {
+  user: null,
+  login: async () => false,
+  register: async () => ({ success: false, error: "Context not initialized" }),
+  logout: () => {},
+  isLoading: false,
+  users: [],
+  addUser: async () => ({ success: false, error: "Context not initialized" }),
+  updateUser: async () => false,
+  deleteUser: async () => false,
+  toggleUserStatus: async () => false,
+  refreshUsers: async () => {},
+};
+
+const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Omit<
@@ -187,7 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   console.log("✅ Registration successful");
                   resolve({ success: true });
                 } else {
-                  console.error("❌ Registration failed:", data.error);
+                  console.error("�� Registration failed:", data.error);
 
                   // Provide specific error messages based on status code
                   let errorMessage = data.error || "Erro ao criar conta";
