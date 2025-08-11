@@ -95,18 +95,24 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('🔑 Tentando fazer login com:', email);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log('📊 Resultado do login:', { data, error });
+
       if (error) {
+        console.error('❌ Erro no login:', error.message);
         return { error: error.message };
       }
 
+      console.log('✅ Login realizado com sucesso:', data.user?.email);
       return {};
     } catch (error) {
+      console.error('💥 Erro inesperado no login:', error);
       return { error: "Erro inesperado durante o login" };
     }
   };
