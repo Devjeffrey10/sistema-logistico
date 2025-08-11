@@ -53,16 +53,20 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('🔄 Auth state change:', event, session?.user?.email);
       setSession(session);
 
       if (session?.user) {
-        setUser({
+        const newUser = {
           id: session.user.id,
           email: session.user.email || "",
           name: session.user.user_metadata?.name,
           role: session.user.user_metadata?.role,
-        });
+        };
+        console.log('👤 Usuário autenticado:', newUser);
+        setUser(newUser);
       } else {
+        console.log('🚪 Usuário deslogado');
         setUser(null);
       }
 
@@ -112,7 +116,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
       console.log('✅ Login realizado com sucesso:', data.user?.email);
       return {};
     } catch (error) {
-      console.error('💥 Erro inesperado no login:', error);
+      console.error('��� Erro inesperado no login:', error);
       return { error: "Erro inesperado durante o login" };
     }
   };
