@@ -127,6 +127,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
 
     try {
+      console.log("🔄 Sending registration request...");
+
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -135,26 +137,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify(userData),
       });
 
-      if (!response.ok) {
-        console.error("Register failed:", response.status, response.statusText);
+      console.log("📡 Response status:", response.status, response.statusText);
+
+      // Try to parse the response even if it's not ok
+      let data: LoginResponse;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error("Failed to parse response:", parseError);
         setIsLoading(false);
-        return { success: false, error: "Erro no servidor" };
+        return {
+          success: false,
+          error: `Erro do servidor (${response.status}): Resposta inválida`
+        };
       }
 
-      const data: LoginResponse = await response.json();
-
-      if (data.success) {
+      if (response.ok && data.success) {
+        console.log("✅ Registration successful");
         setIsLoading(false);
         return { success: true };
       } else {
-        console.error("Register failed:", data.error);
+        console.error("❌ Registration failed:", data.error);
         setIsLoading(false);
-        return { success: false, error: data.error || "Erro ao criar conta" };
+
+        // Provide specific error messages based on status code
+        let errorMessage = data.error || "Erro ao criar conta";
+
+        if (response.status === 409) {
+          errorMessage = "Este email já está em uso";
+        } else if (response.status === 503) {
+          errorMessage = "Serviço temporariamente indisponível. Tente novamente em alguns minutos.";
+        } else if (response.status >= 500) {
+          errorMessage = "Erro interno do servidor. Tente novamente.";
+        }
+
+        return { success: false, error: errorMessage };
       }
     } catch (error) {
-      console.error("Register error:", error);
+      console.error("❌ Network/Connection error:", error);
       setIsLoading(false);
-      return { success: false, error: "Erro de conexão" };
+      return {
+        success: false,
+        error: "Erro de conexão. Verifique sua internet e tente novamente."
+      };
     }
   };
 
