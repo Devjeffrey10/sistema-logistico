@@ -24,20 +24,9 @@ import {
 } from "lucide-react";
 
 export default function Login() {
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Proteção contra erro de contexto
-  let authContext;
-  try {
-    authContext = useAuth();
-  } catch (error) {
-    console.error("Login: AuthContext error:", error);
-    // Fallback temporário
-    authContext = { login: async () => false, isLoading: false };
-  }
-
-  const { login, isLoading } = authContext;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
