@@ -23,6 +23,7 @@ interface SupabaseAuthContextType {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
+  resendConfirmation: (email: string) => Promise<{ error?: string }>;
 }
 
 const SupabaseAuthContext = createContext<SupabaseAuthContextType | undefined>(
