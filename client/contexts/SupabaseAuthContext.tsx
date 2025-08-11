@@ -19,7 +19,7 @@ interface SupabaseAuthContextType {
   user: SupabaseUser | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error?: string }>;
+  signUp: (email: string, password: string, role?: string) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string }>;
