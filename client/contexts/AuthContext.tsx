@@ -202,7 +202,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                   console.log("✅ Registration successful");
                   resolve({ success: true });
                 } else {
-                  console.error("�� Registration failed:", data.error);
+                  console.error("❌ Registration failed:", data.error);
 
                   // Provide specific error messages based on status code
                   let errorMessage = data.error || "Erro ao criar conta";
@@ -397,14 +397,5 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    // Log para debugging
-    console.error("AuthContext is undefined. Component tree:", {
-      hasAuthContext: !!AuthContext,
-      contextValue: context,
-    });
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  return useContext(AuthContext);
 }
