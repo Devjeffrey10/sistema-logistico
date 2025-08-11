@@ -355,6 +355,33 @@ export default function SupabaseLogin() {
                     </div>
                   </div>
 
+                  <div className="space-y-2">
+                    <Label htmlFor="user-role">Tipo de Usuário</Label>
+                    <div className="relative">
+                      <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                      <Select
+                        value={userRole}
+                        onValueChange={setUserRole}
+                        disabled={loading}
+                      >
+                        <SelectTrigger className="pl-10">
+                          <SelectValue placeholder="Selecione o tipo de usuário" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">
+                            Administrador - Acesso completo ao sistema
+                          </SelectItem>
+                          <SelectItem value="operator">
+                            Operador - Gerencia operações diárias
+                          </SelectItem>
+                          <SelectItem value="viewer">
+                            Visualizador - Apenas visualização de relatórios
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
                   {signupError && (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
