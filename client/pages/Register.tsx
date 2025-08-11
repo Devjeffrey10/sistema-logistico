@@ -156,17 +156,17 @@ export default function Register() {
             <CardTitle className="text-2xl text-center">Criar Conta</CardTitle>
             <CardDescription className="text-center">
               Preencha as informações para criar sua conta
-              <div className="mt-3 p-3 bg-green-50 dark:bg-green-950/30 rounded-lg text-xs text-green-700 dark:text-green-300">
-                <p className="font-medium mb-1">💡 Dica:</p>
-                <p>
-                  Após criar sua conta, você poderá fazer login usando suas
-                  credenciais.
-                </p>
-                <p>
-                  Para teste imediato, use as contas demo na página de login.
-                </p>
-              </div>
             </CardDescription>
+            <div className="mt-3 p-3 bg-green-50 dark:bg-green-950/30 rounded-lg text-xs text-green-700 dark:text-green-300">
+              <div className="font-medium mb-1">💡 Dica:</div>
+              <div>
+                Após criar sua conta, você poderá fazer login usando suas
+                credenciais.
+              </div>
+              <div>
+                Para teste imediato, use as contas demo na página de login.
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
