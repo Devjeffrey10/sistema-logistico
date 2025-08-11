@@ -136,7 +136,6 @@ export default function SupabaseLogin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-      <DebugAuth />
       <div className="w-full max-w-md space-y-6">
         {/* Theme Toggle */}
         <div className="flex justify-end">
