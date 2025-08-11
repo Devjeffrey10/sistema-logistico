@@ -159,35 +159,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       console.log("📡 Response status:", response.status, response.statusText);
 
-      // Clone the response before reading to avoid "body stream already read" error
-      const responseClone = response.clone();
+      // Check if response has content-type application/json
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("Response is not JSON:", contentType);
+        // Read as text for debugging
+        const responseText = await response.text();
+        console.error("Response text:", responseText);
+        setIsLoading(false);
+        return {
+          success: false,
+          error: `Erro do servidor (${response.status}): Resposta não é JSON`
+        };
+      }
 
-      // Try to parse the response
+      // Read the response body only once
       let data: LoginResponse;
       try {
-        // Check if response has content-type application/json
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          console.error("Response is not JSON:", contentType);
-          setIsLoading(false);
-          return {
-            success: false,
-            error: `Erro do servidor (${response.status}): Resposta não é JSON`
-          };
-        }
-
         data = await response.json();
       } catch (parseError) {
-        console.error("Failed to parse response:", parseError);
-
-        // Try to get response text for debugging
-        try {
-          const responseText = await responseClone.text();
-          console.error("Response text:", responseText);
-        } catch (textError) {
-          console.error("Could not read response text:", textError);
-        }
-
+        console.error("Failed to parse JSON response:", parseError);
         setIsLoading(false);
         return {
           success: false,
