@@ -36,22 +36,17 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('🚀 Inicializando contexto de autenticação...');
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('📱 Sessão inicial:', session?.user?.email || 'Nenhuma');
       setSession(session);
       if (session?.user) {
-        const initialUser = {
+        setUser({
           id: session.user.id,
           email: session.user.email || "",
           name: session.user.user_metadata?.name,
           role: session.user.user_metadata?.role,
-        };
-        console.log('👤 Usuário da sessão inicial:', initialUser);
-        setUser(initialUser);
+        });
       }
-      console.log('✅ Loading false - inicialização completa');
       setLoading(false);
     });
 
